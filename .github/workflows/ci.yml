@@ -1,0 +1,14 @@
+name: First CI Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  hello-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Say Hello
+        run: echo "Hello! CI is working 🚀"
