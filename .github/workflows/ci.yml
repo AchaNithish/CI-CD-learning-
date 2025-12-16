@@ -1,27 +1,40 @@
-name: CI Pipeline - Basics
+name: k6 Load Test
 
 on:
   push:
-    branches:
+    branches:  
       - master
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  basic-check:
+  k6-test:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Download your repo code
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      # Step 2: Show where we are
-      - name: Print working directory
-        run: pwd
+    - name: Set up Node.js (optional, if you need npm packages)
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
 
-      # Step 3: List project files
-      - name: List project files
-        run: ls -la
+    - name: Install k6
+      run: |
+        sudo apt update
+        sudo apt install -y wget
+        wget https://github.com/grafana/k6/releases/latest/download/k6-v0.48.0-linux-amd64.deb
+        sudo dpkg -i k6-v0.48.0-linux-amd64.deb
 
-      # Step 4: Confirm CI works
-      - name: Success message
-        run: echo "CI Level 3 completed successfully 🚀"
+    - name: Run k6 Tests
+      run: |
+        k6 run k6test.js
+        k6 run verify-requests.js
+
+    - name: Upload Report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: k6-reports
+        path: summary.html
