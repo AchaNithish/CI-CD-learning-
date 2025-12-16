@@ -1,4 +1,4 @@
-name: First CI Pipeline
+name: CI Pipeline - Basics
 
 on:
   push:
@@ -6,9 +6,21 @@ on:
       - master
 
 jobs:
-  hello-ci:
+  basic-check:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Say Hello
-        run: echo "Hello! CI is working 🚀"
+      # Step 1: Download your repo code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Show where we are
+      - name: Print working directory
+        run: pwd
+
+      # Step 3: List project files
+        run: ls -la
+
+      # Step 4: Confirm CI works
+      - name: Success message
+        run: echo "CI Level 3 completed successfully 🚀"
