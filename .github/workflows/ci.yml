@@ -19,6 +19,7 @@ jobs:
         run: pwd
 
       # Step 3: List project files
+      - name: List project files
         run: ls -la
 
       # Step 4: Confirm CI works
