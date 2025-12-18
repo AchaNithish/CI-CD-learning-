@@ -4,8 +4,7 @@ on:
   push:
     branches:  
       - master
-  pull_request:
-    branches: [ main ]
+ 
 
 jobs:
   k6-test:
