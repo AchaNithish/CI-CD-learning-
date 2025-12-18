@@ -5,7 +5,6 @@ on:
     branches:  
       - master
  
-
 jobs:
   k6-test:
     runs-on: ubuntu-latest
@@ -33,7 +32,7 @@ jobs:
 
     - name: Upload Report
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: k6-reports
         path: summary.html
