@@ -2,37 +2,34 @@ name: k6 Load Test
 
 on:
   push:
-    branches:  
+    branches:
       - master
- 
+
 jobs:
   k6-test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Node.js (optional, if you need npm packages)
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Install k6 (official repo)
+        run: |
+          sudo apt update
+          sudo apt install -y gnupg software-properties-common
+          curl -fsSL https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt update
+          sudo apt install -y k6
 
-    - name: Install k6
-      run: |
-        sudo apt update
-        sudo apt install -y wget
-        wget https://github.com/grafana/k6/releases/latest/download/k6-v0.48.0-linux-amd64.deb
-        sudo dpkg -i k6-v0.48.0-linux-amd64.deb
+      - name: Run k6 tests
+        run: |
+          k6 run k6test.js
+          k6 run verify-requests.js
 
-    - name: Run k6 Tests
-      run: |
-        k6 run k6test.js
-        k6 run verify-requests.js
-
-    - name: Upload Report
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: k6-reports
-        path: summary.html
+      - name: Upload k6 report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-report
+          path: summary.html
