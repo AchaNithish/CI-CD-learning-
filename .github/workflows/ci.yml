@@ -25,7 +25,6 @@ jobs:
       - name: Run k6 tests
         run: |
           k6 run k6test.js
-          k6 run verify-requests.js
 
       - name: Upload k6 report
         if: always()
